@@ -1,9 +1,14 @@
 const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-module.exports = async ({ req, res }) => {
+module.exports = async (context) => {
   try {
-    const { email } = JSON.parse(req.body);
+    const data = JSON.parse(context.payload || '{}');
+    const email = data.email;
+    if (!email) throw new Error("Email not provided");
+
+    // your resend email logic here
+    context.log(`Sending welcome email to: ${email}`);
 
     await resend.emails.send({
       from: process.env.FROM_EMAIL,
