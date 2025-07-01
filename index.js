@@ -23,7 +23,7 @@ module.exports = async (context) => {
 
     return { success: true };
   } catch (error) {
-    console.error(error);
+    context.error(error);
     return { success: false, message: error.message };
   }
 };
