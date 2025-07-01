@@ -21,9 +21,9 @@ module.exports = async (context) => {
       `,
     });
 
-    return res.json({ success: true });
+    return { success: true };
   } catch (error) {
     console.error(error);
-    return res.json({ success: false, message: error.message });
+    return { success: false, message: error.message };
   }
 };
