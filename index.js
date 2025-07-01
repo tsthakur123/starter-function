@@ -1,14 +1,12 @@
 const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-module.exports = async (context) => {
+module.exports = async ({ req, res, log }) => {
   try {
-    const data = JSON.parse(context.payload || '{}');
-    const email = data.email;
-    if (!email) throw new Error("Email not provided");
+    const body = JSON.parse(req.body); // ✅ this works inside Appwrite Function
+    const email = body.email;
 
-    // your resend email logic here
-    context.log(`Sending welcome email to: ${email}`);
+    if (!email) throw new Error("Email not provided");
 
     await resend.emails.send({
       from: process.env.FROM_EMAIL,
@@ -21,9 +19,9 @@ module.exports = async (context) => {
       `,
     });
 
-    return { success: true };
+    return res.json({ success: true });
   } catch (error) {
-    context.error(error);
-    return { success: false, message: error.message };
+    log(error.message);
+    return res.json({ success: false, message: error.message });
   }
 };
